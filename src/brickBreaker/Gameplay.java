@@ -1,13 +1,9 @@
 package brickBreaker;
 
 import java.awt.event.KeyListener;
-import java.util.Map;
-import java.util.Map;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -16,13 +12,12 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.Timer;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private boolean play = false;
     private int score = 0;
-    private int totalBricks = 1;
+    private int totalBricks = 15;
     private Timer time;
     private int delay = 8;
     private int playerX = 310;
@@ -46,6 +41,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     }
 
     public void paint(Graphics g) {
+        System.out.println("+++++++++++++++++++++++++++++++++");
         // background
         g.setColor(Color.black);
         g.fillRect(1, 1, 692, 592);
@@ -177,7 +173,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             if (playerX >= 600) {
                 playerX = 600;
@@ -229,7 +224,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
 
     }
 
