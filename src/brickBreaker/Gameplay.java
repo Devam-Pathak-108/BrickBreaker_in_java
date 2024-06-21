@@ -22,7 +22,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private boolean play = false;
     private int score = 0;
-    private int totalBricks = 15;
+    private int totalBricks = 1;
     private Timer time;
     private int delay = 8;
     private int playerX = 310;
@@ -41,8 +41,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
         time = new Timer(delay, this);
         time.start();
-        time = new Timer(delay, this);
-        time.start();
+        // time = new Timer(delay, this);
+        // time.start();
     }
 
     public void paint(Graphics g) {
@@ -61,6 +61,14 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         g.fillRect(0, 0, 692, 3);
         g.fillRect(680, 0, 3, 592);
 
+        // Escape
+        g.setColor(Color.white);
+        g.setFont(new Font("serif", Font.BOLD, 15));
+        g.drawString("Press ESC to Restart form lv 1", 10, 30);
+        // Level
+        g.setColor(Color.yellow);
+        g.setFont(new Font("serif", Font.BOLD, 25));
+        g.drawString("lv : " + Level, 300, 30);
         // scores
         g.setColor(Color.white);
         g.setFont(new Font("serif", Font.BOLD, 25));
@@ -78,12 +86,16 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             if (play) {
                 Level++;
             }
+
             play = false;
             ballDirX = 0;
             ballDirY = 0;
+            
             g.setColor(Color.red);
             g.setFont(new Font("serif", Font.BOLD, 30));
             g.drawString("You Won", 190, 300);
+            
+            g.setColor(Color.red);
             g.setFont(new Font("serif", Font.BOLD, 20));
             g.drawString("PRESS ENTER FOR LEVEL" + Level, 230, 350);
         }
@@ -98,7 +110,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             g.setFont(new Font("serif", Font.BOLD, 20));
             g.drawString("PRESS ENTER TO RESTART", 230, 350);
         }
-
+        System.out.println(play+""+totalBricks);
         g.dispose();
     }
 
