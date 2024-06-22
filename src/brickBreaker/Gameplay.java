@@ -187,6 +187,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 moveLeft();
             } 
         }
+        
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!play) {
                 map = new MapGenerator(3 + (Level - 1), 5 + (Level - 1));
