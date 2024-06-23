@@ -104,7 +104,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             play = false;
             ballDirX = 0;
             ballDirY = 0;
-
+            score = 0;
             g2d.setColor(Color.RED);
             g2d.setFont(new Font("Arial", Font.BOLD, 30));
             g2d.drawString("Game Over", 240, 300);
@@ -199,7 +199,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 ballposY = 500;
                 ballDirY = -(1 + level);
                 ballDirX = -(1 - level);
-                score = 0;
                 repaint();
             }
         }
@@ -223,10 +222,10 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     }
 
     public void moveRight() {
-        playerX += 15;
+        playerX += 13+(level * 2);
     }
 
     public void moveLeft() {
-        playerX -= 15;
+        playerX -= 13 +(level *2);
     }
 }
