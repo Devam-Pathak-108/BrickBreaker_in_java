@@ -1,31 +1,27 @@
 package brickBreaker;
 
-import java.awt.event.KeyListener;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
+import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private boolean play = false;
     private int score = 0;
     private int totalBricks = 15;
-    private Timer time;
+    private Timer timer;
     private int delay = 8;
     private int playerX = 310;
     private int ballposX = 500;
     private int ballposY = 500;
     private int ballDirX = 0;
     private int ballDirY = -2;
-    private int Level = 1;
+    private int level = 1;
 
     private MapGenerator map;
 
@@ -34,97 +30,107 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        time = new Timer(delay, this);
-        time.start();
-        // time = new Timer(delay, this);
-        // time.start();
+        timer = new Timer(delay, this);
+        timer.start();
     }
 
     public void paint(Graphics g) {
-        System.out.println("+++++++++++++++++++++++++++++++++");
-        // background
-        g.setColor(Color.black);
-        g.fillRect(1, 1, 692, 592);
-        // drawing map
-        map.draw((Graphics2D) g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // drawing map
-        map.draw((Graphics2D) g);
+        // Background with gradient
+        GradientPaint bg = new GradientPaint(0, 0, Color.BLACK, 0, 600, Color.DARK_GRAY);
+        g2d.setPaint(bg);
+        g2d.fillRect(0, 0, 692, 592);
 
-        // border
-        g.setColor(Color.blue);
-        g.fillRect(0, 0, 3, 592);
-        g.fillRect(0, 0, 692, 3);
-        g.fillRect(680, 0, 3, 592);
+        // Drawing the map
+        map.draw(g2d);
 
-        // Escape
-        g.setColor(Color.white);
-        g.setFont(new Font("serif", Font.BOLD, 15));
-        g.drawString("Press ESC to Restart form lv 1", 10, 30);
-        // Level
-        g.setColor(Color.yellow);
-        g.setFont(new Font("serif", Font.BOLD, 25));
-        g.drawString("lv : " + Level, 300, 30);
-        // scores
-        g.setColor(Color.white);
-        g.setFont(new Font("serif", Font.BOLD, 25));
-        g.drawString("Score : " + score, 550, 30);
+        // Borders
+        g2d.setColor(Color.GRAY);
+        g2d.fillRect(0, 0, 3, 592);
+        g2d.fillRect(0, 0, 692, 3);
+        g2d.fillRect(680, 0, 3, 592);
 
-        // the paddle
-        g.setColor(Color.green);
-        g.fillRect(playerX, 550, 110, 8);
+        // Instructions
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Verdana", Font.PLAIN, 15));
+        g2d.drawString("Press ESC to Restart from Level 1", 10, 30);
 
-        // the Ball
-        g.setColor(Color.yellow);
-        g.fillOval(ballposX, ballposY, 20, 20);
+        // Level display
+        g2d.setColor(Color.ORANGE);
+        g2d.setFont(new Font("Verdana", Font.BOLD, 25));
+        g2d.drawString("Level: " + level, 300, 30);
+
+        // Score display
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Verdana", Font.BOLD, 25));
+        g2d.drawString("Score: " + score, 550, 30);
+
+        // Paddle with gradient
+        GradientPaint paddleGradient = new GradientPaint(playerX, 550, Color.GREEN, playerX + 100, 550, Color.BLUE);
+        g2d.setPaint(paddleGradient);
+        g2d.fillRoundRect(playerX, 550, 110, 8, 10, 10);
+
+        // Ball with gradient
+        GradientPaint ballGradient = new GradientPaint(ballposX, ballposY, Color.YELLOW, ballposX + 20, ballposY + 20, Color.RED);
+        g2d.setPaint(ballGradient);
+        g2d.fillOval(ballposX, ballposY, 20, 20);
+
+        if (totalBricks > 0 && !play && ballposY < 570) {
+            g2d.setColor(Color.RED);
+            g2d.setFont(new Font("Arial", Font.BOLD, 30));
+            g2d.drawString("Press ENTER to Start", 200, 300);
+        }
 
         if (totalBricks <= 0) {
             if (play) {
-                Level++;
+                level++;
             }
 
             play = false;
             ballDirX = 0;
             ballDirY = 0;
-            
-            g.setColor(Color.red);
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("You Won", 190, 300);
-            
-            g.setColor(Color.red);
-            g.setFont(new Font("serif", Font.BOLD, 20));
-            g.drawString("PRESS ENTER FOR LEVEL" + Level, 230, 350);
+
+            g2d.setColor(Color.RED);
+            g2d.setFont(new Font("Arial", Font.BOLD, 30));
+            g2d.drawString("You Won!", 260, 300);
+
+            g2d.setFont(new Font("Arial", Font.BOLD, 20));
+            g2d.drawString("Press ENTER to Continue to Level " + level, 180, 350);
         }
 
         if (ballposY > 570) {
             play = false;
             ballDirX = 0;
             ballDirY = 0;
-            g.setColor(Color.red);
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("GAME OVER", 190, 300);
-            g.setFont(new Font("serif", Font.BOLD, 20));
-            g.drawString("PRESS ENTER TO RESTART", 230, 350);
+
+            g2d.setColor(Color.RED);
+            g2d.setFont(new Font("Arial", Font.BOLD, 30));
+            g2d.drawString("Game Over", 240, 300);
+
+            g2d.setFont(new Font("Arial", Font.BOLD, 20));
+            g2d.drawString("Press ENTER to Restart", 220, 350);
         }
-        System.out.println(play+""+totalBricks);
-        g.dispose();
+
+        g2d.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        time.start();
+        timer.start();
         if (play) {
             if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX, 550, 40, 8))) {
-                ballDirY = -(1 + Level);
-                ballDirX = -(1 + Level);
+                ballDirY = -(1 + level);
+                ballDirX = -(1 + level);
             }
-            if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX + 41, 550, 30, 8))) {
-                ballDirY = -(2 + Level);
+            if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX + 51, 550, 30, 8))) {
+                ballDirY = -(2 + level);
                 ballDirX = 0;
             }
-            if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX + 41 + 31, 550, 40, 8))) {
-                ballDirY = -(1 + Level);
-                ballDirX = +(1 + Level);
+            if (new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX + 51 + 31, 550, 40, 8))) {
+                ballDirY = -(1 + level);
+                ballDirX = +(1 + level);
             }
             A: for (int i = 0; i < map.map.length; i++) {
                 for (int j = 0; j < map.map[0].length; j++) {
@@ -159,7 +165,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             if (ballposY < 0) {
                 ballDirY = -ballDirY;
             }
-            if (ballposX > 680) {
+            if (ballposX > 660) {
                 ballDirX = -ballDirX;
             }
         }
@@ -168,54 +174,44 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if (playerX >= 600) {
-                playerX = 600;
-            } else {
+            if (playerX <= 560) {
                 moveRight();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (playerX < 10) {
-                playerX = 10;
-            } else {
+            if (playerX > 10) {
                 moveLeft();
             }
         }
+
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!play) {
-                map = new MapGenerator(3 + (Level - 1), 5 + (Level - 1));
-
-                totalBricks = (3 + (Level - 1)) * (5 + (Level - 1));
+                map = new MapGenerator(3 + (level - 1), 5 + (level - 1));
+                totalBricks = (3 + (level - 1)) * (5 + (level - 1));
                 play = true;
                 playerX = 310;
                 ballposX = 500;
                 ballposY = 500;
-
-                ballDirY = -(1 + Level);
-                ballDirX = -(1 - Level);
-
+                ballDirY = -(1 + level);
+                ballDirX = -(1 - level);
                 score = 0;
                 repaint();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            Level = 1;
-            map = new MapGenerator(3 + (Level - 1), 5 + (Level - 1));
-
-            totalBricks = (3 + (Level - 1)) * (5 + (Level - 1));
+            level = 1;
+            map = new MapGenerator(3 + (level - 1), 5 + (level - 1));
+            totalBricks = (3 + (level - 1)) * (5 + (level - 1));
             playerX = 310;
             ballposX = 500;
             ballposY = 500;
-
-            ballDirY = -(1 + Level);
-            ballDirX = -(1 - Level);
-
+            ballDirY = -(1 + level);
+            ballDirX = -(1 - level);
             score = 0;
             play = false;
             repaint();
@@ -224,17 +220,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-
     }
 
     public void moveRight() {
-        play = true;
         playerX += 15;
     }
 
     public void moveLeft() {
-        play = true;
         playerX -= 15;
     }
-
 }
